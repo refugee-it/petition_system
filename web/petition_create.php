@@ -24,8 +24,7 @@
 
 
 
-session_start();
-
+require_once("./libraries/session.inc.php");
 
 require_once("./libraries/languagelib.inc.php");
 require_once(getLanguageFile("petition_create"));

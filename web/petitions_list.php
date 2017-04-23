@@ -1,5 +1,5 @@
 <?php
-/* Copyright (C) 2014-2016  Stephan Kreutzer
+/* Copyright (C) 2014-2017  Stephan Kreutzer
  *
  * This file is part of petition system for refugee-it.de.
  *
@@ -50,6 +50,17 @@ if (isset($_POST['logout']) === true)
     }
 }
 
+$isLoggedIn = false;
+
+if (isset($_SESSION['user_id']) === true &&
+    isset($_SESSION['instance_path']) === true)
+{
+    if (dirname(__FILE__) === $_SESSION['instance_path'])
+    {
+        $isLoggedIn = true;
+    }
+}
+
 
 
 require_once("./libraries/languagelib.inc.php");
@@ -74,7 +85,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n".
      "          </div>\n".
      "          <div class=\"mainbox_body\">\n";
 
-if (isset($_SESSION['user_id']) === true)
+if ($isLoggedIn === true)
 {
     echo "            <form action=\"petition_create.php\" method=\"post\">\n".
          "              <fieldset>\n".

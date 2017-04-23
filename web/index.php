@@ -1,5 +1,5 @@
 <?php
-/* Copyright (C) 2012-2016  Stephan Kreutzer
+/* Copyright (C) 2012-2017  Stephan Kreutzer
  *
  * This file is part of petition system for refugee-it.de.
  *
@@ -225,6 +225,21 @@ else
 
 if (is_array($user) === true)
 {
+    $language = null;
+
+    if (isset($_SESSION['language']) === true)
+    {
+        $language = $_SESSION['language'];
+    }
+
+    $_SESSION = array();
+
+    if ($language != null)
+    {
+        $_SESSION['language'] = $language;
+    }
+
+    $_SESSION['instance_path'] = dirname(__FILE__);
     $_SESSION['user_id'] = $user['id'];
     $_SESSION['user_name'] = $_POST['name'];
     $_SESSION['user_role'] = $user['role'];
