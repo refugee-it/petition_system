@@ -66,6 +66,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n".
      "        <title>".LANG_PAGETITLE."</title>\n".
      "        <link rel=\"stylesheet\" type=\"text/css\" href=\"mainstyle.css\"/>\n".
      "        <meta http-equiv=\"expires\" content=\"1296000\"/>\n".
+     "        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/>\n".
      "    </head>\n".
      "    <body>\n".
      getHTMLLanguageSelector("petition_sign.php?handle=".$handle).

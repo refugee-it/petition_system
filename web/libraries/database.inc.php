@@ -1,5 +1,5 @@
 <?php
-/* Copyright (C) 2013-2016 Stephan Kreutzer
+/* Copyright (C) 2013-2017 Stephan Kreutzer
  *
  * This file is part of petition system for refugee-it.de.
  *
@@ -93,9 +93,6 @@ class Database
         return $this->prefix;
     }
 
-    /**
-     * @param[in] $sql 
-     */
     public function Query($sql, $arguments, $parameterTypes)
     {
         if ($this->IsConnected() !== true)
@@ -171,6 +168,58 @@ class Database
             }
 
             return -10;
+        }
+
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $stmt->closeCursor();
+
+        return $result;
+    }
+
+    /**
+     * @attention This overloaded method should be used only, if the argument
+     *     for \p $sql is a hard-coded string from a PHP-file.
+     * @see Query($sql, $arguments, $parameterTypes)
+     */
+    public function QueryUnsecure($sql)
+    {
+        if ($this->IsConnected() !== true)
+        {
+            return -1;
+        }
+
+        $stmt = false;
+
+        try
+        {
+            $stmt = $this->pdo->prepare($sql);
+        }
+        catch (PDOException $ex)
+        {
+            return -2;
+        }
+
+        if ($stmt == false)
+        {
+            return -3;
+        }
+
+        if (@$stmt->execute() == false)
+        {
+            $errorInfo = $this->pdo->errorInfo();
+
+            if (isset($errorInfo) === true)
+            {
+                $errorInfo = $errorInfo[2];
+
+                if (isset($errorInfo) === true)
+                {
+                    $this->lastErrorMessage = $errorInfo;
+                }
+            }
+
+            return -4;
         }
 
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -392,6 +441,23 @@ class Database
         return false;
     }
 
+    /* Requires >= PHP 5.3.3.
+    public function IsInTransaction()
+    {
+        if ($this->IsConnected() !== true)
+        {
+            return false;
+        }
+
+        if ($this->pdo->inTransaction() === true)
+        {
+            return true;
+        }
+
+        return false;
+    }
+    */
+
     public function CommitTransaction()
     {
         if ($this->IsConnected() !== true)
@@ -403,6 +469,8 @@ class Database
         {
             return true;
         }
+
+        $this->pdo->rollBack();
 
         return false;
     }

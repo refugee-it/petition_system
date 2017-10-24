@@ -1,5 +1,5 @@
 <?php
-/* Copyright (C) 2012-2016  Stephan Kreutzer
+/* Copyright (C) 2012-2017  Stephan Kreutzer
  *
  * This file is part of petition system for refugee-it.de.
  *
@@ -27,8 +27,8 @@ require_once(dirname(__FILE__)."/database.inc.php");
 
 
 
-define("PETITION_STATUS_NOT_PUBLIC", 1);
-define("PETITION_STATUS_PUBLIC", 2);
+define("PETITION_STATUS_UNLISTED", 1);
+define("PETITION_STATUS_LISTED", 2);
 define("PETITION_STATUS_TRASHED", 3);
 
 
@@ -57,7 +57,7 @@ function AddNewPetition($title,
         $datetimeEnd = null;
     }
 
-    $values = array(NULL, $title, $description, PETITION_STATUS_NOT_PUBLIC, $datetimeEnd, $handle, $userId);
+    $values = array(NULL, $title, $description, PETITION_STATUS_UNLISTED, $datetimeEnd, $handle, $userId);
     $types = array(Database::TYPE_NULL, Database::TYPE_STRING, Database::TYPE_STRING, Database::TYPE_INT);
 
     if (is_numeric($datetimeEnd) === true &&
@@ -175,6 +175,64 @@ function SignPetition($idPetition,
 
     Database::Get()->RollbackTransaction();
     return -4;
+}
+
+function GetPetitionList()
+{
+    if (Database::Get()->IsConnected() !== true)
+    {
+        return -1;
+    }
+
+    $petitions = Database::Get()->QueryUnsecure("SELECT `id`,\n".
+                                                "    `title`,\n".
+                                                "    `handle`\n".
+                                                "FROM `".Database::Get()->GetPrefix()."petitions`\n".
+                                                "WHERE 1\n");
+
+    if (is_array($petitions) !== true)
+    {
+        return null;
+    }
+
+    if (count($petitions) <= 0)
+    {
+        return null;
+    }
+
+    return $petitions;
+}
+
+function GetSignatures($id)
+{
+    /** @todo Check for empty parameters. */
+
+    if (Database::Get()->IsConnected() !== true)
+    {
+        return -1;
+    }
+
+    $signatures = Database::Get()->Query("SELECT `id`,\n".
+                                       "    `name`,\n".
+                                       "    `zip_code`,\n".
+                                       "    `city`,\n".
+                                       "    `datetime_signed`\n".
+                                       "FROM `".Database::Get()->GetPrefix()."signatures`\n".
+                                       "WHERE `id_petition`=?\n",
+                                       array($id),
+                                       array(Database::TYPE_INT));
+
+    if (is_array($signatures) !== true)
+    {
+        return null;
+    }
+
+    if (count($signatures) <= 0)
+    {
+        return null;
+    }
+
+    return $signatures;
 }
 
 

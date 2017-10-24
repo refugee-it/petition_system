@@ -87,6 +87,20 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n".
 
 if ($isLoggedIn === true)
 {
+    $petitions = GetPetitionList();
+
+    if (is_array($petitions) === true)
+    {
+        echo "            <ul>\n";
+
+        foreach ($petitions as $petition)
+        {
+            echo "              <li><a href=\"petition_details.php?handle=".htmlspecialchars($petition['handle'], ENT_COMPAT | ENT_XML1, "UTF-8")."\">".htmlspecialchars($petition['title'], ENT_COMPAT | ENT_XML1, "UTF-8")."</a></li>\n";
+        }
+
+        echo "            </ul>\n";
+    }
+
     echo "            <form action=\"petition_create.php\" method=\"post\">\n".
          "              <fieldset>\n".
          "                <input type=\"submit\" value=\"".LANG_CREATEPETITIONBUTTON."\"/><br/>\n".

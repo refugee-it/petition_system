@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2016  Stephan Kreutzer
+/* Copyright (C) 2013-2017  Stephan Kreutzer
  *
  * This file is part of petition system for refugee-it.de.
  *
@@ -118,3 +118,38 @@ fieldset
     color: red;
 }
 
+.table
+{
+    display: table;
+}
+
+.tr
+{
+    display: table-row;
+}
+
+.thead
+{
+    display: table-header-group;
+}
+
+.tbody
+{
+     display: table-row-group;
+}
+
+.tfoot
+{
+    display: table-footer-group;
+}
+
+.th
+{
+    display: table-cell;
+    font-weight: bold;
+}
+
+.td
+{
+    display: table-cell;
+}
